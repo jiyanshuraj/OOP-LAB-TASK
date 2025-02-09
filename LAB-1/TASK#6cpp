@@ -1,0 +1,115 @@
+#include <iostream>
+using namespace std;
+
+void Weekly_AQI_Tracker(int arr[][28], int cities[], int row) {
+    for (int i = 0; i < row; i++) {
+        int weeklyAvg = 0;
+        for (int j = 0; j < 7; j++) {
+            weeklyAvg += arr[i][j];
+        }
+        cities[i] = weeklyAvg / 7;
+    }
+
+    cout << "\nWeekly average AQI for each city:\n";
+    for (int i = 0; i < row; i++) {
+        cout << "City " << i + 1 << ": " << cities[i] << endl;
+    }
+}
+
+void critical_pollution_days(int arr[][28], int row) {
+    cout << "\nCritical Pollution Days (AQI >= 150):\n";
+    for (int i = 0; i < row; i++) {
+        cout << "City " << i + 1 << ":\n";
+        for (int j = 0; j < 28; j++) {
+            if (arr[i][j] >= 150) {
+                cout << "  Day " << j + 1 << ": AQI = " << arr[i][j] << endl;
+            }
+        }
+    }
+}
+
+void compare_highest_lowest_AQI(int arr[][28], int row) {
+    int highestAQI = 0, lowestAQI = 1000;
+
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < 28; j++) {
+            if (arr[i][j] > highestAQI) {
+                highestAQI = arr[i][j];
+            }
+            if (arr[i][j] < lowestAQI) {
+                lowestAQI = arr[i][j];
+            }
+        }
+    }
+
+    cout << "\nHighest AQI recorded during the month: " << highestAQI << endl;
+    cout << "Lowest AQI recorded during the month: " << lowestAQI << endl;
+}
+
+void monthly_average_aqi(int arr[][28], int row) {
+    cout << "\nMonthly Average AQI for each city:\n";
+    for (int i = 0; i < row; i++) {
+        int totalAQI = 0;
+        for (int j = 0; j < 28; j++) {
+            totalAQI += arr[i][j];
+        }
+        cout << "City " << i + 1 << ": " << totalAQI / 28 << endl;
+    }
+}
+
+void most_improved_air_quality(int arr[][28], int row) {
+    int mostImprovedCity = -1;
+    int maxDrop = -1;
+
+    for (int i = 0; i < row; i++) {
+        int firstWeekAvg = 0, lastWeekAvg = 0;
+
+        for (int j = 0; j < 7; j++) {
+            firstWeekAvg += arr[i][j];
+        }
+        firstWeekAvg /= 7;
+
+        for (int j = 21; j < 28; j++) {
+            lastWeekAvg += arr[i][j];
+        }
+        lastWeekAvg /= 7;
+
+        int drop = firstWeekAvg - lastWeekAvg;
+
+        if (drop > maxDrop) {
+            maxDrop = drop;
+            mostImprovedCity = i;
+        }
+    }
+
+    if (mostImprovedCity != -1) {
+        cout << "\nCity with the most improved air quality (largest drop in AQI): City " << mostImprovedCity + 1 << endl;
+        cout << "Drop in AQI: " << maxDrop << endl;
+    } else {
+        cout << "No significant improvement in air quality found.\n";
+    }
+}
+
+int main() {
+    int city;
+    cout << "Enter number of cities: ";
+    cin >> city;
+
+    int cities[city] = {0};
+    int arr[city][28];
+
+    for (int i = 0; i < city; i++) {
+        for (int j = 0; j < 28; j++) {
+            cout << "Enter AQI[" << i + 1 << "][" << j + 1 << "]: ";
+            cin >> arr[i][j];
+        }
+    }
+
+    Weekly_AQI_Tracker(arr, cities, city);
+    critical_pollution_days(arr, city);
+    compare_highest_lowest_AQI(arr, city);
+    monthly_average_aqi(arr, city);
+    most_improved_air_quality(arr, city);
+
+    return 0;
+}
