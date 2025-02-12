@@ -1,0 +1,106 @@
+#include<iostream>
+using namespace std;
+class Book{
+    private:
+    string title;
+float price;
+int *stock;
+static int count;
+float dp;
+public:
+Book():title(" "),price(0.0),stock(new int(30)){
+    ++count;
+}
+
+Book(string title,float price,int stock){
+this->title = title;
+this->price = price;
+this->stock = new int(stock);
+*(this->stock)=stock;
+count++;
+}
+Book(Book& obj){
+    title = obj.title;
+    price = obj.price;
+    stock = new int(*obj.stock);
+}
+~Book(){
+    count--;
+    delete stock;
+    cout<<"terminated: "<<count<<endl;
+}
+void applyDiscount(int copies){
+    if (*stock>copies)
+    {
+         if (copies>10)
+        {
+            dp = price*0.90;
+            cout<<"price aftter discount: "<<dp<<"total cost"<<dp*copies;
+        }
+       else if (copies>5)
+        {
+             dp = price*0.95;
+            cout<<"price aftter discount: "<<dp<<"total cost"<<dp*copies;
+        }   
+    }
+else
+{
+    cout<<"error!"<<endl;
+    cout<<"Stock avalable "<<*stock<<endl;
+}
+
+}
+void Purchase(int copies){
+    if (*stock>0)
+    {
+        if (*stock<5)
+        {
+            cout<<"low-stock Warning!"<<endl;
+        }
+        
+       else if(*stock>copies){
+        *stock-=copies;
+        cout<<"Stock remained: "<<*stock<<endl;
+       }
+    }
+    else
+    {
+        cout<<"invalid"<<endl;
+    }
+    
+}
+void Display(){
+    cout<<"\nTitle: "<<title<<endl;
+    cout<<"Price: "<<price<<endl;
+    cout<<"Stock: "<<*stock<<endl;
+}
+void update(string t,float p,int v){
+ this->title = t;
+    this->price = p;
+    delete this->stock;
+    this->stock = new int(v);
+    *(this->stock)=v;
+    cout<<"stock updated"<<endl;
+   
+}
+
+};
+int Book::count = 0;
+int main()
+{
+Book b;
+int copies,copies1;
+cout<<"Enter copies. you want to purchase: ";
+cin>>copies;
+b.applyDiscount(copies);
+b.Purchase(copies);
+b.update("lost city",45.85,65);
+cout<<"Enter copies you want to purcchase: ";
+cin>>copies1;
+b.Purchase(copies1);
+b.applyDiscount(copies1);
+b.Display();
+Book b2(b);
+b2.Display();
+return 0;
+}
